@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset='utf-8'>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js' > </script>
+<style>
+div{
+	margin-left:1px;
+	margin-top:100px;
+	height:1000px;
+	width:1000px;
+}
+</style>
+
+</head>
+<body>
+<div>
+<input id="upload-input" type="file" name="uploads[]" multiple="multiple">
+
+<canvas id="myChart"></canvas>
+</div>
+<script src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js' ></script>
+
+
+<script>
+
+
+
+
+
+
+
+
+
+
+$.getJSON("s1.json", function(x) {
+
+
+
+
+// console.log(x.groups[0].peaks);
+// x.groups[0].
+
+y =x.groups[0].peaks;
+eic = []
+y.forEach(function(y1){
+	// console.log(y);
+	eic.push(y1.eic);
+
+});
+rt= [];
+intensity = [];
+eic.forEach(function(p) {
+	rt.push(p.rt);
+	intensity.push(p.intensity);
+
+});
+
+for(i = 0; i<rt[0].length ; i++){
+	if (intensity[0][i]==0){
+		rt[0].splice(rt[0][i],1);
+		intensity[0].splice(intensity[0][i],1);
+		intensity[1].splice(intensity[1][i],1);
+		intensity[2].splice(intensity[2][i],1);
+	}
+	if(rt[0][i]>13.326){
+		rt[0].splice(rt[0][i],1);
+			
+	}
+}
+
+
+// console.log(rt1);
+
+
+
+var ctx = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: rt[0],
+        datasets: [{
+            label: 'Intensity',
+            data: intensity[0],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.4)',
+            ],
+            borderColor: [
+               'rgba(255, 99, 132, 0.01)',
+            ],
+            borderWidth: 0
+        },
+        {
+            label:'intensity 2',
+            data: intensity[1],
+            backgroundColor: [
+                'rgba(30, 99, 132, 0.5)',
+                
+            ],
+            borderColor: [
+                'rgba(30,99,132,0.01)',
+               
+            ],
+            borderWidth: 0
+        },
+        {
+            label:'intensity 3',
+            data: intensity[2],
+            backgroundColor: [
+                'rgba(177, 20, 10, 0.8)',
+                
+            ],
+            borderColor: [
+                'rgba(177,20,10,0.8)',
+               
+            ],
+            borderWidth: 0
+        }]
+    },
+    options:{
+    	tooltips:{
+    		mode:'nearest',
+    	},
+    	scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Intensity'
+          },
+
+        }],
+		 xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'RT'
+          },
+
+        }],
+
+      }
+
+    },       
+
+});
+});
+</script>
+</body>
+
+</html>
